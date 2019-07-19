@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">QuoteMe</string>
+
+    <string-array name="genres_array">
+        <item>Positivity</item>
+        <item>Success</item>
+        <item>Motivation</item>
+        <item>Romance</item>
+        <item>Spirituality</item>
+    </string-array>
+</resources>
