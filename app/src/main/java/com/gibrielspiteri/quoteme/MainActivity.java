@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final String TAG = "MainActivity";
@@ -18,10 +21,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Button btnPost;
     private Spinner spinnerGenre;
     private String text;
+    private DatabaseReference myRef;
+    private FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Firebase Connection
+        database = FirebaseDatabase.getInstance();
+        //myRef = database.getReference("feelgood-46f98");
 
         etInput = findViewById(R.id.etInput);
         btnPost = findViewById(R.id.btnPost);
@@ -37,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, etInput.getText(), Toast.LENGTH_SHORT).show();
+                myRef = database.child(text).setValue(etInput.getText());
             }
         });
     }
