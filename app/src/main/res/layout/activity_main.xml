@@ -43,6 +43,7 @@
         android:layout_marginTop="8dp"
         android:text="Quote It"
         app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="sendOnChannel1"
         app:layout_constraintTop_toBottomOf="@+id/spinnerGenre" />
 
     <TextView
@@ -102,11 +103,8 @@
 
     <Button
         android:id="@+id/btnView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
+        android:layout_width="113dp"
+        android:layout_height="48dp"
         android:text="SwitchView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnPost" />

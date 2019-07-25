@@ -3,7 +3,11 @@ package com.gibrielspiteri.quoteme;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +27,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.gibrielspiteri.quoteme.Notification.CHANNEL_1_ID;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final String TAG = "MainActivity";
@@ -38,11 +44,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Quote newQuote;
     private int max;
 
+    private NotificationManagerCompat notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        notificationManager = NotificationManagerCompat.from(this);
         //Firebase Connection
         myRef = FirebaseDatabase.getInstance().getReference();
 
@@ -62,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendOnChannel1(v);
                 id = myRef.push().getKey();
                 myRef.child(genreText).runTransaction(new Transaction.Handler() {
                     @NonNull
@@ -77,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
 
                         Toast.makeText(MainActivity.this, String.valueOf(max), Toast.LENGTH_SHORT).show();
+
                         myRef.child(genreText).child(id).setValue(newQuote);
                     }
                 });
@@ -106,4 +117,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    public void sendOnChannel1(View v){
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_arrow_upward_black_24dp)
+                .setContentTitle(etAuthor.getText().toString())
+                .setContentText(etInput.getText().toString())
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+        notificationManager.notify(1,notification);
+    }
 }
