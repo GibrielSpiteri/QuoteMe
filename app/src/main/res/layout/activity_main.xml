@@ -109,4 +109,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnPost" />
 
+    <Button
+        android:id="@+id/btnFeed"
+        android:layout_width="115dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="4dp"
+        android:text="Feed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

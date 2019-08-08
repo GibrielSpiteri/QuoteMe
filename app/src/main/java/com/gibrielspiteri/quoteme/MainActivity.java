@@ -8,7 +8,9 @@ import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText etAuthor;
     private Button btnPost;
     private Button btnView;
+    private Button btnFeed;
     private Spinner spinnerGenre;
     private String genreText;
     private String id;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         etAuthor = findViewById(R.id.etAuthor);
         btnPost = findViewById(R.id.btnPost);
         btnView = findViewById(R.id.btnView);
+        btnFeed = findViewById(R.id.btnFeed);
         spinnerGenre = findViewById(R.id.spinnerGenre);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.genres_array, android.R.layout.simple_spinner_item);
@@ -101,7 +105,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, SeeQuoteActivity.class);
                 MainActivity.this.startActivity(i);
-                Log.i(TAG,"Moving Views");
+                Log.i(TAG,"Moving Views: Random Gen");
+            }
+        });
+        btnFeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, FeedActivity.class);
+                MainActivity.this.startActivity(i);
+                Log.i(TAG,"Moving Views: Feed");
             }
         });
     }
@@ -118,12 +130,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void sendOnChannel1(View v){
+        String message = etInput.getText().toString();
+        String author = etAuthor.getText().toString();
+        Intent activityIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent,0);
+
+        Intent broadcastIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent actionIntent = PendingIntent.getActivity(this, 0, broadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        broadcastIntent.putExtra("toastMessage", message);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_arrow_upward_black_24dp)
-                .setContentTitle(etAuthor.getText().toString())
-                .setContentText(etInput.getText().toString())
+                .setContentTitle(author)
+                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.BLUE)
+                .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .build();
         notificationManager.notify(1,notification);
     }
